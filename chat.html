@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShyamChat 💬</title>
+  <style>
+  
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1e1b4b, #0f172a 70%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+ 
+    .glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.25;
+      animation: float 25s infinite alternate ease-in-out;
+      z-index: -1;
+    }
+
+    .glow.one {
+      width: 400px;
+      height: 400px;
+      background: #3b82f6;
+      top: 10%;
+      left: 5%;
+    }
+
+    .glow.two {
+      width: 450px;
+      height: 450px;
+      background: #a855f7;
+      bottom: 10%;
+      right: 10%;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    
+    header {
+      text-align: center;
+      padding: 22px 0;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #e0e7ff;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    header span {
+      background: linear-gradient(90deg, #38bdf8, #a855f7, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #38bdf8, #a855f7, #f472b6);
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; width: 80px; }
+      50% { opacity: 1; width: 110px; }
+    }
+
+    
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+      margin: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      backdrop-filter: blur(20px);
+    }
+
+    #chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #a78bfa, #3b82f6);
+      border-radius: 8px;
+    }
+
+  
+    .message {
+      margin: 10px 0;
+      padding: 12px 18px;
+      border-radius: 20px;
+      max-width: 75%;
+      font-size: 15px;
+      position: relative;
+      line-height: 1.5;
+      animation: slideIn 0.35s ease forwards;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .my-message {
+      background: linear-gradient(135deg, #0ea5e9, #22d3ee);
+      align-self: flex-end;
+      border-bottom-right-radius: 6px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.4);
+    }
+
+    .other-message {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(168,85,247,0.4);
+    }
+
+    strong {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .timestamp {
+      display: block;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+   
+    #input-container {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.07);
+      border-top: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.4);
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 25px;
+      outline: none;
+      font-size: 15px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      caret-color: #22d3ee;
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.1);
+      backdrop-filter: blur(6px);
+    }
+
+    #message-input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    button {
+      margin-left: 12px;
+      padding: 12px 26px;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #22d3ee);
+      background-size: 200% auto;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.5);
+      transition: all 0.4s ease;
+    }
+
+    button:hover {
+      background-position: right center;
+      transform: scale(1.08);
+      box-shadow: 0 4px 22px rgba(59,130,246,0.7);
+    }
+
+    @media (max-width: 600px) {
+      header { font-size: 18px; padding: 16px 0; }
+      .message { max-width: 85%; font-size: 14px; }
+      #message-input { font-size: 14px; }
+      button { padding: 10px 20px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+
+  <header><span>ShyamChat</span></header>
+
+  <div id="chat-container"></div>
+
+  <div id="input-container">
+    <input type="text" id="message-input" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io(window.location.origin);
+    const chatContainer = document.getElementById("chat-container");
+    const messageInput = document.getElementById("message-input");
+    const username = localStorage.getItem("chatName") || "Anonymous";
+
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (text) {
+        socket.emit("chatMessage", {
+          user: username,
+          text,
+          time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+        messageInput.value = "";
+      }
+    }
+
+    messageInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    socket.on("chatMessage", msg => {
+      const div = document.createElement("div");
+      div.classList.add("message");
+      div.classList.add(msg.user === username ? "my-message" : "other-message");
+      div.innerHTML = `<strong>${msg.user}</strong><br>${msg.text}<span class="timestamp">${msg.time}</span>`;
+      chatContainer.appendChild(div);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  </script>
+</body>
+</html>
